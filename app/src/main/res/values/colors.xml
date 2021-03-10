@@ -12,4 +12,5 @@
     <color name="default_blue">#0000FF</color>
     <color name="default_white">#FFFFFF</color>
     <color name="default_yellow">#FFFF00</color>
+    <color name="myBlue">#314CE3</color>
 </resources>

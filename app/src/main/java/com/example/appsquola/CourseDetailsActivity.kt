@@ -3,13 +3,12 @@ package com.example.appsquola
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.appsquola.model.Course
 import com.example.appsquola.services.CourseService
-import kotlinx.android.synthetic.main.activity_course_details.*
+import kotlinx.android.synthetic.main.activity_c_detail.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,28 +19,42 @@ class CourseDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_course_details)
+        setContentView(R.layout.activity_c_detail)
 
-        editionsNumber = findViewById(R.id.courseDetailsEditionsNumberText)
-        addEdtionBtn.setOnClickListener{
+        newEdtionBtn.setOnClickListener{
             val intent = Intent(this, NewCourseEditionActivity::class.java)
             intent.putExtra("courseId", id)
             startActivity(intent)
         }
-        val bundle: Bundle? = intent.extras
+//        val bundle: Bundle? = intent.extras
+//
+//        if (bundle?.containsKey("courseId")!!) {
+//             id = intent.getLongExtra("courseId", 0)
+//            if(id != null) {
+//                loadDetails(id!!)
+//            }
+//        }
 
-        if (bundle?.containsKey("courseId")!!) {
-             id = intent.getLongExtra("courseId", 0)
-            if(id != null) {
-                loadDetails(id!!)
-            }
-        }
-
-        updateCourseButton.setOnClickListener {
+        saveBtn.setOnClickListener {
             updateCourse()
         }
 
     }
+
+
+    override fun onResume() {
+        super.onResume()
+        val bundle: Bundle? = intent.extras
+
+        if (bundle?.containsKey("courseId")!!) {
+            id = intent.getLongExtra("courseId", 0)
+            if(id != null) {
+                loadDetails(id!!)
+            }
+        }
+    }
+
+
     fun loadDetails(id: Long) {
         val courseService = ServiceBuilder.buildService(CourseService::class.java)
         val requestCall = courseService.getCourseById(id)
@@ -52,17 +65,17 @@ class CourseDetailsActivity : AppCompatActivity() {
             // classe.
             override fun onResponse(call: Call<Course>, response: Response<Course>) {
                 if (response.isSuccessful) {
-                    val courses = response.body()!!
-                    courseIdField.setText(courses.id.toString())
-                    courseTitleField.setText(courses.title)
-                    courseHoursField.setText(courses.numHours.toString())
-                    courseDescriptionField.setText(courses.description)
-                    courseCostField.setText(courses.cost.toString())
+                    val course = response.body()!!
+                    courseIdTxt.setText(course.id.toString())
+                    courseTitleTxt.setText(course.title)
+                    courseNHoursTxt.setText(course.numHours.toString())
+                    courseDescTxt.setText(course.description)
+                    courseCostTxt.setText(course.cost.toString())
                     val linearLayoutEdition = LinearLayoutManager(this@CourseDetailsActivity)
-                    courseEditionList.layoutManager = linearLayoutEdition
+                    editionsView.layoutManager = linearLayoutEdition
                     //val adapterEdition = CourseEditionListAdapter(courses.editions.toList(),this@CourseDetailsActivity )
-                    val adapterEdition = CourseEditionListAdapter(courses.editions.toMutableList(),this@CourseDetailsActivity )
-                    courseEditionList.adapter = adapterEdition
+                    val adapterEdition = CourseEditionListAdapter(course.editions.toMutableList(),this@CourseDetailsActivity )
+                    editionsView.adapter = adapterEdition
                 } else {
                     Toast.makeText(this@CourseDetailsActivity, "Failed to load course", Toast.LENGTH_LONG).show()
                 }
@@ -73,12 +86,14 @@ class CourseDetailsActivity : AppCompatActivity() {
             }
         })
     }
+
+
     fun updateCourse() {
-        val courseId = courseIdField.text.toString().toLong()
-        val courseTitle = courseTitleField.text.toString()
-        val courseHours = courseHoursField.text.toString().toInt()
-        val courseDescription = courseDescriptionField.text.toString()
-        val courseCost = courseCostField.text.toString().toDouble()
+        val courseId = courseIdTxt.text.toString().toLong()
+        val courseTitle = courseTitleTxt.text.toString()
+        val courseHours = courseNHoursTxt.text.toString().toInt()
+        val courseDescription = courseDescTxt.text.toString()
+        val courseCost = courseCostTxt.text.toString().toDouble()
 
         val newCourse = Course(courseId, courseTitle, courseHours, courseDescription, courseCost, mutableSetOf())
 

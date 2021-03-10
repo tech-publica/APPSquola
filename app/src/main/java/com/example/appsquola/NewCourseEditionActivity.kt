@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.activity_newcourseeditionactivity.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
 
 class NewCourseEditionActivity : AppCompatActivity() {
     var id: Long? = null
@@ -37,28 +38,35 @@ class NewCourseEditionActivity : AppCompatActivity() {
                         Toast.makeText(this@NewCourseEditionActivity, "Successfully Added Edition with id  ${newlyCreatedEdition!!.id}", Toast.LENGTH_LONG).show()
                         finish() // Move back to CourseDetailsActivity
                     } else {
-                        Toast.makeText(this@NewCourseEditionActivity, "Failed to add item", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@NewCourseEditionActivity, "Failed to add item " + response.errorBody() + "   "
+                            + response.code(), Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 override fun onFailure(call: Call<CourseEdition>, t: Throwable) {
-                    Toast.makeText(this@NewCourseEditionActivity, "Failed to add item", Toast.LENGTH_SHORT).show()
+                    t.printStackTrace()
+                    Toast.makeText(this@NewCourseEditionActivity, "Error: Failed to add item", Toast.LENGTH_SHORT).show()
                 }
             })
         }
     }
+//    fun dateStringfromDatePicker(year: Int, month: Int, day: Int): String {
+//        val stringDay = if(day <= 9) {
+//                            "0$day"
+//                        } else {
+//                            "$day"
+//                        }
+//        val stringMonth = if(day <= 9) {
+//                            "0$month"
+//                          } else {
+//                            "$month"
+//                          }
+//        return "$year-$stringMonth-$stringDay"
+//    }
+
     fun dateStringfromDatePicker(year: Int, month: Int, day: Int): String {
-        val stringDay = if(day <= 9) {
-                            "0$day"
-                        } else {
-                            "$day"
-                        }
-        val stringMonth = if(day <= 9) {
-                            "0$month"
-                          } else {
-                            "$month"
-                          }
-        return "$year-$stringMonth-$stringDay"
+
+        return LocalDate.of(year, month, day).toString()
     }
 }
 

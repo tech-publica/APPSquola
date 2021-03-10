@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.example.appsquola.model.CourseEdition
 import com.example.appsquola.services.CourseService
-import kotlinx.android.synthetic.main.activity_course_details.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
